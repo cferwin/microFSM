@@ -1,0 +1,8 @@
+obj/
+
+tests/*.o
+tests/tests.exe
+tests/tests
+
+src/Session.vim
+libmicrofsm.a
