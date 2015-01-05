@@ -2,7 +2,7 @@
 #define MICROFSM_H
 
 #define MAX_STATES 128
-#define MAX_TRANS 32
+#define MAX_TRANSITIONS 32
 
 /***************************************
  * MicroFSM
@@ -18,16 +18,47 @@ typedef struct mfsm_fsm {
   // transitions.
   int curState;
   int states[MAX_STATES]; // Stores IDs of states tracked within the FSM
-  int transitions[MAX_TRANS]; // Stores ID's of tracked transitions
+  int transitions[MAX_TRANSITIONS]; // Stores ID's of tracked transitions
   // Stores transition destinations associated with a specific transition ID
   // and source state. The states and transitions arrays are PARALLEL with
   // the destinations array; indexes must be identical.
-  int destinations[MAX_TRANS][MAX_STATES];
+  int destinations[MAX_TRANSITIONS][MAX_STATES];
 } mfsm_fsm;
 
 /***************************************
+* FSM Interface Functions
+***************************************/
+
+// int isValidStateID(struct mfsm_fsm, int)
+//
+// Ensures the state ID is present in the FSM.
+//
+// Parameters:
+// fsm        mfsm_fsm  FSM context
+// s          int       State ID
+//
+// Returns:
+// 0        -- Valid state ID
+// Non-Zero -- Invalid state ID
+int isValidStateID(mfsm_fsm fsm, int s);
+
+// int isValidTransitionID(struct mfsm_fsm, int)
+//
+// Ensures the transition ID is present in the FSM.
+//
+// Parameters:
+// fsm        mfsm_fsm  FSM context
+// src        int       Transition ID
+//
+// Returns:
+// 0        -- Valid transition ID
+// Non-Zero -- Invalid transition ID
+int isValidTransitionID(mfsm_fsm fsm, int t);
+
+
+/***************************************
 * Utility Functions
-**************************************/
+***************************************/
 
 // int getStateIndex(struct mfsm_fsm, int)
 //

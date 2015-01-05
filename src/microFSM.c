@@ -1,6 +1,55 @@
 #include "microFSM.h"
 
 /***************************************
+* FSM Interface Functions
+***************************************/
+
+// int isValidStateID(struct mfsm_fsm, int)
+//
+// Ensures the state ID is present in the FSM.
+//
+// Parameters:
+// fsm        mfsm_fsm  FSM context
+// s          int       State ID
+//
+// Returns:
+// 0        -- Valid state ID
+// Non-Zero -- Invalid state ID
+int isValidStateID(mfsm_fsm fsm, int s) {
+  int i = 0;
+  for (; i < MAX_STATES; i++) {
+    if (fsm.states[i] == s) {
+      return 0;
+    }
+  }
+
+  return -1;
+}
+
+// int isValidTransitionID(struct mfsm_fsm, int)
+//
+// Ensures the transition ID is present in the FSM.
+//
+// Parameters:
+// fsm        mfsm_fsm  FSM context
+// src        int       Transition ID
+//
+// Returns:
+// 0        -- Valid transition ID
+// Non-Zero -- Invalid transition ID
+int isValidTransitionID(mfsm_fsm fsm, int t) {
+  int i = 0;
+  for (; i < MAX_TRANSITIONS; i++) {
+    if (fsm.transitions[i] == t) {
+      return 0;
+    }
+  }
+
+  return -1;
+}
+
+
+/***************************************
 * Utility Functions
 **************************************/
 
@@ -39,7 +88,7 @@ int getStateIndex(mfsm_fsm fsm, int state) {
 // Failure -- -1
 int getTransitionIndex(mfsm_fsm fsm, int trans) {
   int i = 0;
-  for (; i < MAX_STATES; i++) {
+  for (; i < MAX_TRANSITIONS; i++) {
     if (fsm.transitions[i] == trans) {
       return i;
     }
