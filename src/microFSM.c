@@ -48,6 +48,42 @@ int isValidTransitionID(mfsm_fsm fsm, int t) {
   return -1;
 }
 
+// int isValidTransition(struct mfsm_fsm, int, int)
+//
+// Verifies the presence of a transition from src with transition trans.
+//
+// Parameters:
+// fsm        mfsm_fsm  FSM context
+// t          int       Transition ID
+// s          int       Source state ID
+//
+// Returns:
+// 0  -- Valid transition
+// -1 -- Invalid transition
+// -2 -- Invalid source state
+// -3 -- Transition has invalid destination state ID
+int isValidTransition(mfsm_fsm fsm, int t, int s) {
+  // Find the given transition
+  int ti = getTransitionIndex(fsm, t);
+  if (ti == -1) {
+    return -1;
+  }
+
+  // Find the given source state
+  int si = getStateIndex(fsm, s);
+  if (si == -1) {
+    return -2;
+  }
+
+  // Validate the transition's destination state
+  if (isValidStateID(fsm, fsm.destinations[ti][si]) != 0) {
+    return -3;
+  }
+
+  // Transition ID, source state ID, and destination state IDs are all valid
+  return 0;
+}
+
 
 /***************************************
 * Utility Functions

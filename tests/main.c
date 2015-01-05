@@ -53,6 +53,24 @@ void test_isValidTransitionID(void) {
   report("isValidTransitionID()");
 }
 
+void test_isValidTransition(void) {
+  // Create a mock fsm, transition, source state, and destination state
+  mfsm_fsm fsm;
+  fsm.transitions[4] = 7;       // Transition
+  fsm.states[9] = 2;            // Source state
+  fsm.states[8] = 6;            // Destination state
+  fsm.destinations[4][9] = 6;   // Make the associations
+
+  // Attempt to verify the transition
+  int i = isValidTransition(fsm, 7, 2);
+  assertMsg(i == 0, "The transition was considered invalid");
+  if (i != 0) {
+    printf("Returned: %d\n", i);
+  }
+
+  report("isValidTransition()");
+}
+
 
 int main(int argc, char **argv) {
   printf("Running tests...\n\n");
@@ -64,6 +82,7 @@ int main(int argc, char **argv) {
   // Test FSM interface functions
   test_isValidStateID();
   test_isValidTransitionID();
+  test_isValidTransition();
 
   return 0;
 }

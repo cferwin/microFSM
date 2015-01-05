@@ -48,12 +48,26 @@ int isValidStateID(mfsm_fsm fsm, int s);
 //
 // Parameters:
 // fsm        mfsm_fsm  FSM context
-// src        int       Transition ID
+// t        int       Transition ID
 //
 // Returns:
 // 0        -- Valid transition ID
 // Non-Zero -- Invalid transition ID
 int isValidTransitionID(mfsm_fsm fsm, int t);
+
+// int isValidTransition(struct mfsm_fsm, int, int)
+//
+// Verifies the presence of a transition from src with transition trans.
+//
+// Parameters:
+// fsm        mfsm_fsm  FSM context
+// t          int       Transition ID
+// s          int       Source state ID
+//
+// Returns:
+// 0        -- Valid transition
+// Non-Zero -- Invalid transition
+int isValidTransition(mfsm_fsm fsm, int t, int s);
 
 
 /***************************************
