@@ -26,21 +26,21 @@ int isValidStateID(mfsm_fsm fsm, int s) {
   return -1;
 }
 
-// int isValidTransitionID(struct mfsm_fsm, int)
+// int isValidInputID(struct mfsm_fsm, int)
 //
-// Ensures the transition ID is present in the FSM.
+// Ensures the input ID is present in the FSM.
 //
 // Parameters:
-// fsm        mfsm_fsm  FSM context
-// src        int       Transition ID
+// fsm  mfsm_fsm  FSM context
+// n    int       Input ID
 //
 // Returns:
-// 0        -- Valid transition ID
-// Non-Zero -- Invalid transition ID
-int isValidTransitionID(mfsm_fsm fsm, int t) {
+// 0        -- Valid input ID
+// Non-Zero -- Invalid input ID
+int isValidInputID(mfsm_fsm fsm, int n) {
   int i = 0;
-  for (; i < MAX_TRANSITIONS; i++) {
-    if (fsm.transitions[i] == t) {
+  for (; i < MAX_INPUTS; i++) {
+    if (fsm.inputs[i] == n) {
       return 0;
     }
   }
@@ -50,22 +50,22 @@ int isValidTransitionID(mfsm_fsm fsm, int t) {
 
 // int isValidTransition(struct mfsm_fsm, int, int)
 //
-// Verifies the presence of a transition from src with transition trans.
+// Verifies the presence of a transition from state s with input n.
 //
 // Parameters:
 // fsm        mfsm_fsm  FSM context
-// t          int       Transition ID
+// n          int       Input ID
 // s          int       Source state ID
 //
 // Returns:
 // 0  -- Valid transition
-// -1 -- Invalid transition
+// -1 -- Invalid input
 // -2 -- Invalid source state
 // -3 -- Transition has invalid destination state ID
-int isValidTransition(mfsm_fsm fsm, int t, int s) {
-  // Find the given transition
-  int ti = getTransitionIndex(fsm, t);
-  if (ti == -1) {
+int isValidTransition(mfsm_fsm fsm, int n, int s) {
+  // Find the given input
+  int ni = getInputIndex(fsm, n);
+  if (ni == -1) {
     return -1;
   }
 
@@ -76,21 +76,21 @@ int isValidTransition(mfsm_fsm fsm, int t, int s) {
   }
 
   // Validate the transition's destination state
-  if (isValidStateID(fsm, fsm.destinations[ti][si]) != 0) {
+  if (isValidStateID(fsm, fsm.destinations[ni][si]) != 0) {
     return -3;
   }
 
-  // Transition ID, source state ID, and destination state IDs are all valid
+  // Input ID, source state ID, and destination state IDs are all valid
   return 0;
 }
 
 // int addTransition(struct mfsm_fsm, int, int, int)
 //
-// Creates a transition from State s with Transition t to State d.
+// Creates a transition from State s with Input n to State d.
 //
 // Parameters:
-// fsm        mfsm_fsm  FSM context
-// t          int       Transition ID
+// fsm        mfsm_fsm* Pointer to FSM context
+// n          int       Input ID
 // s          int       Source state ID
 // d          int       Destination state ID
 //
@@ -100,10 +100,10 @@ int isValidTransition(mfsm_fsm fsm, int t, int s) {
 // -2 -- Invalid source state ID
 // -3 -- Invalid destination state ID
 // -4 -- Something went wrong associating the transition and states
-int addTransition(mfsm_fsm *fsm, int t, int s, int d) {
-  // Find the given transition
-  int ti = getTransitionIndex(*fsm, t);
-  if (ti == -1) {
+int addTransition(mfsm_fsm *fsm, int n, int s, int d) {
+  // Find the given input
+  int ni = getInputIndex(*fsm, n);
+  if (ni == -1) {
     return -1;
   }
 
@@ -118,11 +118,11 @@ int addTransition(mfsm_fsm *fsm, int t, int s, int d) {
     return -3;
   }
 
-  // Association the transition and source state with the destination state
-  fsm->destinations[ti][si] = d;
+  // Associate the input and source state with the destination state
+  fsm->destinations[ni][si] = d;
 
   // Confirm the transition's destination state was set correctly
-  if (isValidTransition(*fsm, t, s) != 0) {
+  if (isValidTransition(*fsm, n, s) != 0) {
     return -4;
   }
 
@@ -156,21 +156,21 @@ int getStateIndex(mfsm_fsm fsm, int state) {
   return -1;
 }
 
-// int getTransitionIndex(struct mfsm_fsm, int)
+// int getInputIndex(struct mfsm_fsm, int)
 //
-// Finds the index of the given transition in the transitions array.
+// Finds the index of the given input in the inputs array.
 //
 // Parameters:
-// fsm      mfsm_fsm  FSM context
-// trans    int       Transition ID 
+// fsm  mfsm_fsm  FSM context
+// n    int       Input ID 
 //
 // Returns:
-// Success -- Index of the given transition
+// Success -- Index of the given input
 // Failure -- -1
-int getTransitionIndex(mfsm_fsm fsm, int trans) {
+int getInputIndex(mfsm_fsm fsm, int n) {
   int i = 0;
-  for (; i < MAX_TRANSITIONS; i++) {
-    if (fsm.transitions[i] == trans) {
+  for (; i < MAX_INPUTS; i++) {
+    if (fsm.inputs[i] == n) {
       return i;
     }
   }

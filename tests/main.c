@@ -15,16 +15,16 @@ void test_getStateIndex(void) {
   report("getStateIndex()");
 }
 
-void test_getTransitionIndex(void) {
-  // Create a mock fsm and transition
+void test_getInputIndex(void) {
+  // Create a mock fsm and input
   mfsm_fsm fsm;
-  fsm.transitions[4] = 7;
+  fsm.inputs[4] = 7;
 
   // Attempt to get the correct index
-  int i = getTransitionIndex(fsm, 7);
-  assertMsg(i == 4, "The returned transition index was incorrect");
+  int i = getInputIndex(fsm, 7);
+  assertMsg(i == 4, "The returned input index was incorrect");
 
-  report("getTransitionIndex()");
+  report("getInputIndex()");
 }
 
 // FSM Interface function tests
@@ -41,22 +41,22 @@ void test_isValidStateID(void) {
   report("isValidStateID()");
 }
 
-void test_isValidTransitionID(void) {
-  // Create a mock fsm and transition
+void test_isValidInputID(void) {
+  // Create a mock fsm and input
   mfsm_fsm fsm;
-  fsm.transitions[4] = 7;
+  fsm.inputs[4] = 7;
 
-  // Attempt to verify the transition
-  int i = isValidTransitionID(fsm, 7);
-  assertMsg(i == 0, "The transition was considered invalid");
+  // Attempt to verify the input ID
+  int i = isValidInputID(fsm, 7);
+  assertMsg(i == 0, "The input was considered invalid");
 
-  report("isValidTransitionID()");
+  report("isValidInputID()");
 }
 
 void test_isValidTransition(void) {
-  // Create a mock fsm, transition, source state, and destination state
+  // Create a mock fsm, input, source state, and destination state
   mfsm_fsm fsm;
-  fsm.transitions[4] = 7;       // Transition
+  fsm.inputs[4] = 7;            // Input
   fsm.states[9] = 2;            // Source state
   fsm.states[8] = 6;            // Destination state
   fsm.destinations[4][9] = 6;   // Make the associations
@@ -72,9 +72,9 @@ void test_isValidTransition(void) {
 }
 
 void test_addTransition(void) {
-  // Create a mock fsm, transition, source state, and destination state
+  // Create a mock fsm, input, source state, and destination state
   mfsm_fsm fsm;
-  fsm.transitions[4] = 7;       // Transition
+  fsm.inputs[4] = 7;            // Input
   fsm.states[9] = 2;            // Source state
   fsm.states[8] = 6;            // Destination state
 
@@ -85,9 +85,9 @@ void test_addTransition(void) {
     printf("Returned: %d\n", i);
   }
 
-  // Test whether the transition is stored in the array
+  // Test whether the transition is stored in the destinations array
   int d = fsm.destinations[4][9];
-  assertMsg(d == 6, "The stored value was incorrect");
+  assertMsg(d == 6, "The stored destination ID was incorrect");
   if (d != 6) {
     printf("Value: %d\n", d);
   }
@@ -101,11 +101,11 @@ int main(int argc, char **argv) {
   
   // Test utility functions
   test_getStateIndex();
-  test_getTransitionIndex();
+  test_getInputIndex();
 
   // Test FSM interface functions
   test_isValidStateID();
-  test_isValidTransitionID();
+  test_isValidInputID();
   test_isValidTransition();
   test_addTransition();
 
