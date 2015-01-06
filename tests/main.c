@@ -71,6 +71,30 @@ void test_isValidTransition(void) {
   report("isValidTransition()");
 }
 
+void test_addTransition(void) {
+  // Create a mock fsm, transition, source state, and destination state
+  mfsm_fsm fsm;
+  fsm.transitions[4] = 7;       // Transition
+  fsm.states[9] = 2;            // Source state
+  fsm.states[8] = 6;            // Destination state
+
+  // Attempt to create the transition
+  int i = addTransition(&fsm, 7, 2, 6);
+  assertMsg(i == 0, "The transition was not successfully created");
+  if (i != 0) {
+    printf("Returned: %d\n", i);
+  }
+
+  // Test whether the transition is stored in the array
+  int d = fsm.destinations[4][9];
+  assertMsg(d == 6, "The stored value was incorrect");
+  if (d != 6) {
+    printf("Value: %d\n", d);
+  }
+
+  report("addTransition()");
+}
+
 
 int main(int argc, char **argv) {
   printf("Running tests...\n\n");
@@ -83,6 +107,7 @@ int main(int argc, char **argv) {
   test_isValidStateID();
   test_isValidTransitionID();
   test_isValidTransition();
+  test_addTransition();
 
   return 0;
 }

@@ -65,9 +65,29 @@ int isValidTransitionID(mfsm_fsm fsm, int t);
 // s          int       Source state ID
 //
 // Returns:
-// 0        -- Valid transition
-// Non-Zero -- Invalid transition
+// 0  -- Valid transition
+// -1 -- Invalid transition
+// -2 -- Invalid source state
+// -3 -- Transition has invalid destination state ID
 int isValidTransition(mfsm_fsm fsm, int t, int s);
+
+// int addTransition(struct mfsm_fsm, int, int, int)
+//
+// Creates a transition from State s with Transition t to State d.
+//
+// Parameters:
+// fsm        mfsm_fsm* Pointer to FSM context
+// t          int       Transition ID
+// s          int       Source state ID
+// d          int       Destination state ID
+//
+// Returns:
+// 0  -- Transition successfully created
+// -1 -- Invalid transition ID
+// -2 -- Invalid source state ID
+// -3 -- Invalid destination state ID
+// -4 -- Something went wrong associating the transition and states
+int addTransition(mfsm_fsm *fsm, int t, int s, int d);
 
 
 /***************************************

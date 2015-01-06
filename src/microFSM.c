@@ -84,6 +84,51 @@ int isValidTransition(mfsm_fsm fsm, int t, int s) {
   return 0;
 }
 
+// int addTransition(struct mfsm_fsm, int, int, int)
+//
+// Creates a transition from State s with Transition t to State d.
+//
+// Parameters:
+// fsm        mfsm_fsm  FSM context
+// t          int       Transition ID
+// s          int       Source state ID
+// d          int       Destination state ID
+//
+// Returns:
+// 0  -- Transition successfully created
+// -1 -- Invalid transition ID
+// -2 -- Invalid source state ID
+// -3 -- Invalid destination state ID
+// -4 -- Something went wrong associating the transition and states
+int addTransition(mfsm_fsm *fsm, int t, int s, int d) {
+  // Find the given transition
+  int ti = getTransitionIndex(*fsm, t);
+  if (ti == -1) {
+    return -1;
+  }
+
+  // Find the given source state
+  int si = getStateIndex(*fsm, s);
+  if (si == -1) {
+    return -2;
+  }
+
+  // Confirm the destination state exists
+  if (isValidStateID(*fsm, d) == -1) {
+    return -3;
+  }
+
+  // Association the transition and source state with the destination state
+  fsm->destinations[ti][si] = d;
+
+  // Confirm the transition's destination state was set correctly
+  if (isValidTransition(*fsm, t, s) != 0) {
+    return -4;
+  }
+
+  return 0;
+}
+
 
 /***************************************
 * Utility Functions
