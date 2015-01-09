@@ -109,6 +109,39 @@ void test_removeState(void) {
   report("removeState()");
 }
 
+void test_addInput(void) {
+  // Create a mock fsm
+  mfsm_fsm fsm;
+  initFSM(&fsm);
+
+  // Attempt to add a new input ID
+  int i = addInput(&fsm, 7);
+  assertMsg(i == 0, "The input ID could not be added");
+  if (i != 0) {
+    printf("Returned: %d\n", i);
+  }
+
+  report("addInput()");
+}
+
+void test_removeInput(void) {
+  // Create a mock fsm and input
+  mfsm_fsm fsm;
+  initFSM(&fsm);
+  fsm.inputs[4] = 7;
+
+  // Attempt to remove an input
+  int i = removeInput(&fsm, 7);
+  assertMsg(i == 0, "The input ID could not be removed");
+  if (i != 0) {
+    printf("Returned: %d\n", i);
+  } else {
+    assertMsg(fsm.inputs[4] < MIN_INPUT_ID, "Index was not reset after  supposed removal");
+  }
+
+  report("removeInput()");
+}
+
 void test_addTransition(void) {
   // Create a mock fsm, input, source state, and destination state
   mfsm_fsm fsm;
@@ -150,6 +183,10 @@ int main(int argc, char **argv) {
   // Test state addition/removal
   test_addState();
   test_removeState();
+
+  // Test input addition/removal
+  test_addInput();
+  test_removeInput();
 
   // Test FSM interface functions
   test_addTransition();

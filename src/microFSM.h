@@ -4,6 +4,7 @@
 #define MAX_STATES 128
 #define MAX_INPUTS 32
 #define MIN_STATE_ID 1
+#define MIN_INPUT_ID 1
 
 /***************************************
  * MicroFSM
@@ -131,6 +132,34 @@ int addState(mfsm_fsm *fsm, int s);
 // 0  -- State successfully removed
 // -1 -- State could not be found
 int removeState(mfsm_fsm *fsm, int s);
+
+// int addInput(mfsm_fsm*, int)
+//
+// Adds an input ID to the list of tracked inputs.
+//
+// Parameters:
+// fsm  mfsm_fsm* Pointer to FSM context
+// s    int       Input ID
+//
+// Returns:
+// 0  -- Input successfully created
+// -1 -- Input ID exceeded acceptable bounds (0 < n)
+// -2 -- Input ID already exists
+// -3 -- The inputs array is full. No more inputs can be tracked at this time.
+int addInput(mfsm_fsm *fsm, int n);
+
+// int removeInput(mfsm_fsm*, int)
+//
+// Removes a input ID from the list of tracked inputs.
+//
+// Parameters:
+// fsm  mfsm_fsm* Pointer to FSM context
+// s    int       Input ID
+//
+// Returns:
+// 0  -- Input successfully removed
+// -1 -- Input could not be found
+int removeInput(mfsm_fsm *fsm, int n);
 
 
 /***************************************

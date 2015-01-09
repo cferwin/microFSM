@@ -219,6 +219,67 @@ int removeState(mfsm_fsm *fsm, int s) {
   return 0;
 }
 
+// int addInput(mfsm_fsm*, int)
+//
+// Adds an input ID to the list of tracked inputs.
+//
+// Parameters:
+// fsm  mfsm_fsm* Pointer to FSM context
+// s    int       Input ID
+//
+// Returns:
+// 0  -- Input successfully created
+// -1 -- Input ID exceeded acceptable bounds (0 < n)
+// -2 -- Input ID already exists
+// -3 -- The inputs array is full. No more inputs can be tracked at this time.
+int addInput(mfsm_fsm *fsm, int n) {
+  // Boundary check for input ID
+  if (n < MIN_INPUT_ID) {
+    return -1;
+  }
+
+  // Ensure the input is not already being tracked
+  if (getInputIndex(*fsm, n) != -1) {
+    return -2;
+  }
+
+  // Insert the input ID into the first free space in the inputs array
+  int i = 0;
+  for (; i < MAX_INPUTS; i++) {
+    if (fsm->inputs[i] < MIN_INPUT_ID) {
+      fsm->inputs[i] = n;
+      return 0;
+    }
+  }
+
+  // A free space could not be found for the ID.
+  return -3;
+}
+
+// int removeInput(mfsm_fsm*, int)
+//
+// Removes a input ID from the list of tracked inputs.
+//
+// Parameters:
+// fsm  mfsm_fsm* Pointer to FSM context
+// s    int       Input ID
+//
+// Returns:
+// 0  -- Input successfully removed
+// -1 -- Input could not be found
+int removeInput(mfsm_fsm *fsm, int n) {
+  // Find the index of the input ID
+  int ni = getInputIndex(*fsm, n);
+  if (ni == -1) {
+    return -1;
+  }
+
+  // Reset the index to an invalid ID so it can be reused
+  fsm->inputs[ni] = MIN_INPUT_ID-1;
+  
+  return 0;
+}
+
 
 /***************************************
 * Utility Functions
