@@ -6,6 +6,7 @@
 void test_getStateIndex(void) {
   // Create a mock fsm and state
   mfsm_fsm fsm;
+  initFSM(&fsm);
   fsm.states[4] = 7;
 
   // Attempt to get the correct index
@@ -18,6 +19,7 @@ void test_getStateIndex(void) {
 void test_getInputIndex(void) {
   // Create a mock fsm and input
   mfsm_fsm fsm;
+  initFSM(&fsm);
   fsm.inputs[4] = 7;
 
   // Attempt to get the correct index
@@ -32,6 +34,7 @@ void test_getInputIndex(void) {
 void test_isValidStateID(void) {
   // Create a mock fsm and state
   mfsm_fsm fsm;
+  initFSM(&fsm);
   fsm.states[4] = 7;
 
   // Attempt to verify the transition
@@ -44,6 +47,7 @@ void test_isValidStateID(void) {
 void test_isValidInputID(void) {
   // Create a mock fsm and input
   mfsm_fsm fsm;
+  initFSM(&fsm);
   fsm.inputs[4] = 7;
 
   // Attempt to verify the input ID
@@ -56,6 +60,7 @@ void test_isValidInputID(void) {
 void test_isValidTransition(void) {
   // Create a mock fsm, input, source state, and destination state
   mfsm_fsm fsm;
+  initFSM(&fsm);
   fsm.inputs[4] = 7;            // Input
   fsm.states[9] = 2;            // Source state
   fsm.states[8] = 6;            // Destination state
@@ -71,9 +76,43 @@ void test_isValidTransition(void) {
   report("isValidTransition()");
 }
 
+void test_addState(void) {
+  // Create a mock fsm
+  mfsm_fsm fsm;
+  initFSM(&fsm);
+
+  // Attempt to add a new state ID
+  int i = addState(&fsm, 7);
+  assertMsg(i == 0, "The state ID could not be added");
+  if (i != 0) {
+    printf("Returned: %d\n", i);
+  }
+
+  report("addState()");
+}
+
+void test_removeState(void) {
+  // Create a mock fsm and state
+  mfsm_fsm fsm;
+  initFSM(&fsm);
+  fsm.states[4] = 7;
+
+  // Attempt to remove a state
+  int i = removeState(&fsm, 7);
+  assertMsg(i == 0, "The state ID could not be removed");
+  if (i != 0) {
+    printf("Returned: %d\n", i);
+  } else {
+    assertMsg(fsm.states[4] < MIN_STATE_ID, "Index was not reset after  supposed removal");
+  }
+
+  report("removeState()");
+}
+
 void test_addTransition(void) {
   // Create a mock fsm, input, source state, and destination state
   mfsm_fsm fsm;
+  initFSM(&fsm);
   fsm.inputs[4] = 7;            // Input
   fsm.states[9] = 2;            // Source state
   fsm.states[8] = 6;            // Destination state
@@ -103,10 +142,16 @@ int main(int argc, char **argv) {
   test_getStateIndex();
   test_getInputIndex();
 
-  // Test FSM interface functions
+  // Test validators
   test_isValidStateID();
   test_isValidInputID();
   test_isValidTransition();
+
+  // Test state addition/removal
+  test_addState();
+  test_removeState();
+
+  // Test FSM interface functions
   test_addTransition();
 
   return 0;

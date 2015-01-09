@@ -4,6 +4,35 @@
 * FSM Interface Functions
 ***************************************/
 
+// void initFSM (mfsm_fsm*)
+//
+// Set default values for an FSM.
+//
+// Parameters:
+// fsm  mfsm_fsm  FSM context
+//
+// Returns:
+// Nothing
+void initFSM(mfsm_fsm *fsm) {
+  int i = 0;
+  int j = 0;
+  fsm->curState = 0;
+
+  for(; i < MAX_STATES; i++) {
+    fsm->states[i] = 0;
+  }
+
+  for(i = 0; i < MAX_INPUTS; i++) {
+    fsm->inputs[i] = 0;
+  }
+
+  for(i = 0; i < MAX_INPUTS; i++) {
+    for(j = 0; j < MAX_STATES; j++) {
+      fsm->destinations[i][j] = 0;
+    }
+  }
+}
+
 // int isValidStateID(struct mfsm_fsm, int)
 //
 // Ensures the state ID is present in the FSM.
@@ -126,6 +155,67 @@ int addTransition(mfsm_fsm *fsm, int n, int s, int d) {
     return -4;
   }
 
+  return 0;
+}
+
+// int addState(mfsm_fsm*, int)
+//
+// Adds a state ID to the list of tracked states.
+//
+// Parameters:
+// fsm  mfsm_fsm* Pointer to FSM context
+// s    int       State ID
+//
+// Returns:
+// 0  -- State successfully created
+// -1 -- State ID exceeded acceptable bounds (MIN_STATE_ID < s)
+// -2 -- State ID already exists
+// -3 -- The states array is full. No more states can be tracked at this time.
+int addState(mfsm_fsm *fsm, int s) {
+  // Boundary check for state ID
+  if (s < MIN_STATE_ID) {
+    return -1;
+  }
+
+  // Ensure the state is not already being tracked
+  if (getStateIndex(*fsm, s) != -1) {
+    return -2;
+  }
+
+  // Insert the state ID into the first free space in the states array
+  int i = 0;
+  for (; i < MAX_STATES; i++) {
+    if (fsm->states[i] < MIN_STATE_ID) {
+      fsm->states[i] = s;
+      return 0;
+    }
+  }
+
+  // A free space could not be found for the ID.
+  return -3;
+}
+
+// int removeState(mfsm_fsm*, int)
+//
+// Removes a state ID from the list of tracked states.
+//
+// Parameters:
+// fsm  mfsm_fsm* Pointer to FSM context
+// s    int       State ID
+//
+// Returns:
+// 0  -- State successfully removed
+// -1 -- State could not be found
+int removeState(mfsm_fsm *fsm, int s) {
+  // Find the index of the state ID
+  int si = getStateIndex(*fsm, s);
+  if (si == -1) {
+    return -1;
+  }
+
+  // Reset the index to an invalid ID so it can be reused
+  fsm->states[si] = MIN_STATE_ID-1;
+  
   return 0;
 }
 

@@ -3,6 +3,7 @@
 
 #define MAX_STATES 128
 #define MAX_INPUTS 32
+#define MIN_STATE_ID 1
 
 /***************************************
  * MicroFSM
@@ -31,6 +32,17 @@ typedef struct mfsm_fsm {
 /***************************************
 * FSM Interface Functions
 ***************************************/
+
+// void initFSM (mfsm_fsm*)
+//
+// Set default values for an FSM.
+//
+// Parameters:
+// fsm  mfsm_fsm  FSM context
+//
+// Returns:
+// Nothing
+void initFSM(mfsm_fsm *fsm);
 
 // int isValidStateID(struct mfsm_fsm, int)
 //
@@ -91,6 +103,34 @@ int isValidTransition(mfsm_fsm fsm, int n, int s);
 // -3 -- Invalid destination state ID
 // -4 -- Something went wrong associating the transition and states
 int addTransition(mfsm_fsm *fsm, int n, int s, int d);
+
+// int addState(mfsm_fsm*, int)
+//
+// Adds a state ID to the list of tracked states.
+//
+// Parameters:
+// fsm  mfsm_fsm* Pointer to FSM context
+// s    int       State ID
+//
+// Returns:
+// 0  -- State successfully created
+// -1 -- State ID exceeded acceptable bounds (0 < s)
+// -2 -- State ID already exists
+// -3 -- The states array is full. No more states can be tracked at this time.
+int addState(mfsm_fsm *fsm, int s);
+
+// int removeState(mfsm_fsm*, int)
+//
+// Removes a state ID from the list of tracked states.
+//
+// Parameters:
+// fsm  mfsm_fsm* Pointer to FSM context
+// s    int       State ID
+//
+// Returns:
+// 0  -- State successfully removed
+// -1 -- State could not be found
+int removeState(mfsm_fsm *fsm, int s);
 
 
 /***************************************
