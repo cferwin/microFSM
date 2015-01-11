@@ -45,6 +45,11 @@ void initFSM(mfsm_fsm *fsm) {
 // 0        -- Valid state ID
 // Non-Zero -- Invalid state ID
 int isValidStateID(mfsm_fsm fsm, int s) {
+  // Confirm the ID is above the minimum
+  if (s < MIN_STATE_ID) {
+    return -1;
+  }
+
   int i = 0;
   for (; i < MAX_STATES; i++) {
     if (fsm.states[i] == s) {
@@ -67,6 +72,11 @@ int isValidStateID(mfsm_fsm fsm, int s) {
 // 0        -- Valid input ID
 // Non-Zero -- Invalid input ID
 int isValidInputID(mfsm_fsm fsm, int n) {
+  // Confirm the ID is above the minimum
+  if (n < MIN_INPUT_ID) {
+    return -1;
+  }
+
   int i = 0;
   for (; i < MAX_INPUTS; i++) {
     if (fsm.inputs[i] == n) {
@@ -153,6 +163,78 @@ int addTransition(mfsm_fsm *fsm, int n, int s, int d) {
   // Confirm the transition's destination state was set correctly
   if (isValidTransition(*fsm, n, s) != 0) {
     return -4;
+  }
+
+  return 0;
+}
+
+// int removeTransition(struct mfsm_fsm*, int, int)
+//
+// Removes the transition from state s using input n.
+//
+// Parameters:
+// fsm  mfsm_fsm* Pointer to FSM context
+// n    int       Input ID
+// s    int       Source state ID
+//
+// Returns:
+// 0  -- Transition successfully removed
+// -1 -- Invalid transition ID
+// -2 -- Invalid source state ID
+// -3 -- Something went wrong removing the transition destination
+int removeTransition(mfsm_fsm *fsm, int n, int s) {
+  // Find the given input
+  int ni = getInputIndex(*fsm, n);
+  if (ni == -1) {
+    return -1;
+  }
+
+  // Find the given source state
+  int si = getStateIndex(*fsm, s);
+  if (si == -1) {
+    return -2;
+  }
+
+  // Reset the destination ID for the state/input transition
+  fsm->destinations[ni][si] = MIN_STATE_ID-1;
+
+  // Confirm the transition's destination state was reset and is invalid
+  if (isValidTransition(*fsm, n, s) == 0) {
+    return -3;
+  }
+
+  return 0;
+}
+
+// int removeTransitionAll(struct mfsm_fsm*, int)
+//
+// Removes all transitions using input n.
+//
+// Parameters:
+// fsm  mfsm_fsm* Pointer to FSM context
+// n    int       Input ID
+//
+// Returns:
+// 0  -- Transition successfully removed
+// -1 -- Invalid transition ID
+// -2 -- Something went wrong removing the transition destinations
+int removeTransitionAll(mfsm_fsm *fsm, int n) {
+  // Find the given input
+  int ni = getInputIndex(*fsm, n);
+  if (ni == -1) {
+    return -1;
+  }
+
+  // Reset the all destination IDs for the transition input
+  int i = 0;
+  for (; i < MAX_STATES; i++) {
+    // Reset the destination
+    fsm->destinations[ni][i] = MIN_STATE_ID-1;
+
+    // Confirm the transition's destination state was reset and is invalid
+    if (isValidTransition(*fsm, n, fsm->states[i]) == 0) {
+      return -2;
+    }
   }
 
   return 0;
@@ -297,6 +379,10 @@ int removeInput(mfsm_fsm *fsm, int n) {
 // Success -- Index of the given state
 // Failure -- -1
 int getStateIndex(mfsm_fsm fsm, int state) {
+  if (isValidStateID(fsm, state) != 0) {
+    return -1;
+  }
+
   int i = 0;
   for (; i < MAX_STATES; i++) {
     if (fsm.states[i] == state) {
@@ -319,6 +405,10 @@ int getStateIndex(mfsm_fsm fsm, int state) {
 // Success -- Index of the given input
 // Failure -- -1
 int getInputIndex(mfsm_fsm fsm, int n) {
+  if (isValidInputID(fsm, n) != 0) {
+    return -1;
+  }
+
   int i = 0;
   for (; i < MAX_INPUTS; i++) {
     if (fsm.inputs[i] == n) {

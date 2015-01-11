@@ -167,6 +167,78 @@ void test_addTransition(void) {
   report("addTransition()");
 }
 
+void test_removeTransition(void) {
+  // Create a mock fsm, input, source state, and destination state
+  mfsm_fsm fsm;
+  initFSM(&fsm);
+  fsm.inputs[4] = 7;            // Input
+  fsm.states[9] = 2;            // Source state
+  fsm.states[8] = 6;            // Destination state
+
+  // Attempt to create the transition
+  int i = addTransition(&fsm, 7, 2, 6);
+  assertMsg(i == 0, "The transition was not successfully created");
+  if (i != 0) {
+    printf("Returned: %d\n", i);
+  }
+  
+  // Attempt to remove the transition
+  i = removeTransition(&fsm, 7, 2);
+  assertMsg(i == 0, "The transition was not successfully removed");
+  if (i != 0) {
+    printf("Returned: %d\n", i);
+  }
+
+  // Test whether the transition was removed from the destinations array
+  int d = isValidStateID(fsm, fsm.destinations[4][9]);
+  assertMsg(d != 0, "The stored destination ID was still valid");
+
+  report("removeTransition()");
+}
+
+void test_removeTransitionAll(void) {
+  // Create a mock fsm, inputs, source states, and destination states
+  mfsm_fsm fsm;
+  initFSM(&fsm);
+
+  // Input
+  fsm.inputs[3] = 7;
+
+  // Source states
+  fsm.states[2] = 1;
+  fsm.states[4] = 2;
+  fsm.states[6] = 3;
+
+  // Destination states
+  fsm.states[1] = 4;
+  fsm.states[3] = 5;
+  fsm.states[5] = 6;
+
+  // Create the transitions
+  addTransition(&fsm, 7, 1, 4);
+  addTransition(&fsm, 7, 2, 5);
+  addTransition(&fsm, 7, 3, 6);
+  
+  // Attempt to remove the transitions
+  int i = removeTransitionAll(&fsm, 7);
+  assertMsg(i == 0, "The transitions were not successfully removed");
+  if (i != 0) {
+    printf("Returned: %d\n", i);
+  }
+
+  // Test whether the transitions were removed from the destinations array
+  int d = isValidStateID(fsm, fsm.destinations[3][2]);
+  assertMsg(d != 0, "The stored destination ID #1 was still valid");
+
+  d = isValidStateID(fsm, fsm.destinations[3][4]);
+  assertMsg(d != 0, "The stored destination ID #2 was still valid");
+
+  d = isValidStateID(fsm, fsm.destinations[3][6]);
+  assertMsg(d != 0, "The stored destination ID #3 was still valid");
+
+  report("removeTransitionAll()");
+}
+
 
 int main(int argc, char **argv) {
   printf("Running tests...\n\n");
@@ -188,8 +260,10 @@ int main(int argc, char **argv) {
   test_addInput();
   test_removeInput();
 
-  // Test FSM interface functions
+  // Test transition addition/removal
   test_addTransition();
+  test_removeTransition();
+  test_removeTransitionAll();
 
   return 0;
 }

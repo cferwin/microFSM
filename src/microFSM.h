@@ -105,6 +105,36 @@ int isValidTransition(mfsm_fsm fsm, int n, int s);
 // -4 -- Something went wrong associating the transition and states
 int addTransition(mfsm_fsm *fsm, int n, int s, int d);
 
+// int removeTransition(struct mfsm_fsm*, int, int)
+//
+// Removes the transition from state s using input n.
+//
+// Parameters:
+// fsm  mfsm_fsm* Pointer to FSM context
+// n    int       Input ID
+// s    int       Source state ID
+//
+// Returns:
+// 0  -- Transition successfully removed
+// -1 -- Invalid transition ID
+// -2 -- Invalid source state ID
+// -3 -- Something went wrong removing the transition destination
+int removeTransition(mfsm_fsm *fsm, int n, int s);
+
+// int removeTransitionAll(struct mfsm_fsm*, int)
+//
+// Removes all transitions using input n.
+//
+// Parameters:
+// fsm  mfsm_fsm* Pointer to FSM context
+// n    int       Input ID
+//
+// Returns:
+// 0  -- Transition successfully removed
+// -1 -- Invalid transition ID
+// -2 -- Something went wrong removing the transition destinations
+int removeTransitionAll(mfsm_fsm *fsm, int n);
+
 // int addState(mfsm_fsm*, int)
 //
 // Adds a state ID to the list of tracked states.
