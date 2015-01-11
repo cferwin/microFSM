@@ -239,6 +239,39 @@ void test_removeTransitionAll(void) {
   report("removeTransitionAll()");
 }
 
+void test_doTransition(void) {
+  // Create a mock fsm, input, source state, and destination state
+  mfsm_fsm fsm;
+  initFSM(&fsm);
+  fsm.inputs[4] = 7;            // Input
+  fsm.states[9] = 2;            // Source state
+  fsm.states[8] = 6;            // Destination state
+  fsm.curState = 2;
+
+  // Attempt to create the transition
+  int i = addTransition(&fsm, 7, 2, 6);
+  assertMsg(i == 0, "The transition was not successfully created");
+  if (i != 0) {
+    printf("Returned: %d\n", i);
+  }
+  
+  // Attempt to execute the transition
+  i = doTransition(&fsm, 7);
+  assertMsg(i > MIN_STATE_ID, "The transition was not successful");
+  if (i < 0) {
+    printf("Returned: %d\n", i);
+  }
+
+  // Test whether the current state is valid
+  int d = isValidStateID(fsm, fsm.curState);
+  assertMsg(d == 0, "The current state ID was invalid");
+
+  // Test whether the current state has been updated
+  assertMsg(fsm.curState == 6, "The current state ID was not changed");
+
+  report("doTransition()");
+}
+
 
 int main(int argc, char **argv) {
   printf("Running tests...\n\n");
@@ -264,6 +297,9 @@ int main(int argc, char **argv) {
   test_addTransition();
   test_removeTransition();
   test_removeTransitionAll();
+
+  // Test transition functionality
+  test_doTransition();
 
   return 0;
 }

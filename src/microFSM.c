@@ -363,6 +363,42 @@ int removeInput(mfsm_fsm *fsm, int n) {
 }
 
 
+// int doTransition(struct mfsm_fsm*, int)
+//
+// Executes the transition from the FSM's current state using input n. Returns
+// the new current state's ID or an error code.
+//
+// Parameters:
+// fsm  mfsm_fsm  FSM context
+// n    int       Input ID 
+//
+// Returns:
+// Success -- ID of new current State
+// Failure:
+//  -1 -- Invalid input ID
+//  -2 -- The current state ID is invalid
+int doTransition(mfsm_fsm *fsm, int n) {
+  // Find the given input
+  int ni = getInputIndex(*fsm, n);
+  if (ni == -1) {
+    return -1;
+  }
+
+  // Find the current source state
+  int si = getStateIndex(*fsm, fsm->curState);
+  if (si == -1) {
+    return -2;
+  }
+
+  // Check if there is a new destination for the transition
+  if (isValidTransition(*fsm, n, fsm->curState) == 0) {
+    fsm->curState = fsm->destinations[ni][si];
+  }
+
+  return fsm->curState;
+}
+
+
 /***************************************
 * Utility Functions
 **************************************/

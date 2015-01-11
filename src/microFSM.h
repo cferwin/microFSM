@@ -222,4 +222,19 @@ int getStateIndex(mfsm_fsm fsm, int state);
 // Failure -- -1
 int getInputIndex(mfsm_fsm fsm, int n);
 
+// int doTransition(struct mfsm_fsm*, int)
+//
+// Executes the transition from the FSM's current state using input n. Returns
+// the new current state's ID or an error code.
+//
+// Parameters:
+// fsm  mfsm_fsm  FSM context
+// n    int       Input ID 
+//
+// Returns:
+// Success -- ID of new current State
+// Failure:
+//  -1 -- Invalid input ID
+int doTransition(mfsm_fsm *fsm, int n);
+
 #endif //MICROFSM_H
