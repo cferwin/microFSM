@@ -1,5 +1,6 @@
 #include "test.h"
 #include "microFSM.h"
+#include "event.h"
 
 // Utility function tests
 
@@ -273,8 +274,30 @@ void test_doTransition(void) {
 }
 
 
+/****************************************
+* Test Event System
+****************************************/
+void test_initEvent(void) {
+  // Initialize an event
+  mfsm_Event e;
+  initEvent(&e, 7);
+
+  // Test if it was properly initialized
+  assertMsg(e.id == 7, "Event ID was not properly initialized");
+  if (e.id != 7) {
+    printf("Value: %d\n", e.id);
+  }
+
+  report("initEvent()");
+}
+
+
 int main(int argc, char **argv) {
   printf("Running tests...\n\n");
+
+  /****************************************
+  * Test FSM System
+  ****************************************/
   
   // Test utility functions
   test_getStateIndex();
@@ -300,6 +323,13 @@ int main(int argc, char **argv) {
 
   // Test transition functionality
   test_doTransition();
+
+  /****************************************
+  * Test Event System
+  ****************************************/
+
+  // Event functions
+  test_initEvent();
 
   return 0;
 }

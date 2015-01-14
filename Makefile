@@ -9,7 +9,7 @@ CDIR = src
 TEST_DIR = tests
 
 # Object files
-_OBJ = microFSM.o
+_OBJ = microFSM.o event.o
 OBJ  = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 # Output files (binaries)
