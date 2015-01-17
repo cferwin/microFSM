@@ -291,6 +291,62 @@ void test_initEvent(void) {
   report("initEvent()");
 }
 
+void test_appendEvent(void) {
+  // Create some Events and an EventListener
+  mfsm_Event e1;
+  mfsm_Event e2;
+  initEvent(&e1, 7);
+  initEvent(&e2, 9);
+
+  mfsm_EventListener el;
+  initEventListener(&el);
+
+  // Add the event to the listener
+  appendEvent(&el, e1);
+  appendEvent(&el, e2);
+
+  // Test if the events were added to the queue.
+  assertMsg(el.events[0].id == 7, "Event #1 was not successfully appended");
+  assertMsg(el.numEvents == 1, "numEvents was not updated");
+  assertMsg(el.events[1].id == 9, "Event #2 was not successfully appended");
+  assertMsg(el.numEvents == 2, "numEvents was not updated");
+
+  report("appendEvent()");
+}
+
+void test_getNextEvent(void) {
+  // Create some Events and an EventListener
+  mfsm_Event e1;
+  mfsm_Event e2;
+  initEvent(&e1, 7);
+  initEvent(&e2, 9);
+
+  mfsm_EventListener el;
+  initEventListener(&el);
+
+  // Add the event to the listener
+  appendEvent(&el, e1);
+  appendEvent(&el, e2);
+
+  // Test if the events were added to the queue.
+  assertMsg(el.events[0].id == 7, "Event #1 was not successfully appended");
+  assertMsg(el.numEvents == 1, "numEvents was not updated");
+  assertMsg(el.events[1].id == 9, "Event #2 was not successfully appended");
+  assertMsg(el.numEvents == 2, "numEvents was not updated");
+
+  // Try to retrieve the events and retest them
+  mfsm_Event d;
+  getNextEvent(&el, &d);
+  assertMsg(d.id == 9, "Event #2 was not successfully retrieved");
+  assertMsg(el.numEvents == 1, "numEvents was not updated");
+
+  getNextEvent(&el, &d);
+  assertMsg(d.id == 7, "Event #1 was not successfully retrieved");
+  assertMsg(el.numEvents == 0, "numEvents was not updated");
+
+  report("getNextEvent()");
+}
+
 
 int main(int argc, char **argv) {
   printf("Running tests...\n\n");
@@ -330,6 +386,8 @@ int main(int argc, char **argv) {
 
   // Event functions
   test_initEvent();
+  test_appendEvent();
+  test_getNextEvent();
 
   return 0;
 }
