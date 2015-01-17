@@ -107,3 +107,20 @@ int appendEvent(mfsm_EventListener *el, mfsm_Event e) {
 
   return el->numEvents;
 }
+
+/*****************************************************************************
+* EventQueue functions
+*****************************************************************************/
+
+// void initEventQueue(mfsm_EventQueue*)
+//
+// Set default values for an EventQueue.
+//
+// Parameters:
+// eq    mfsm_EventQueue*   Uninitialized EventQueue struct
+//
+// Returns:
+// None
+void initEventQueue(mfsm_EventQueue *eq) {
+  eq->numListeners = 0;
+}

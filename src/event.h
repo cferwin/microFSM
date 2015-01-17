@@ -114,4 +114,15 @@ typedef struct mfsm_EventQueue{
   int numListeners; // Number of EventListeners currently registered
 } mfsm_EventQueue;
 
+// void initEventQueue(mfsm_EventQueue*)
+//
+// Set default values for an EventQueue.
+//
+// Parameters:
+// eq    mfsm_EventQueue*   Uninitialized EventQueue struct
+//
+// Returns:
+// None
+void initEventQueue(mfsm_EventQueue *eq);
+
 #endif //EVENT_H

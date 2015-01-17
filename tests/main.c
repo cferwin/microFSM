@@ -347,6 +347,20 @@ void test_getNextEvent(void) {
   report("getNextEvent()");
 }
 
+void test_initEventQueue(void) {
+  // Initialize an EventQueue
+  mfsm_EventQueue eq;
+  initEventQueue(&eq);
+
+  // Test if it was properly initialized
+  assertMsg(eq.numListeners == 0, "EventQueue was not properly initialized");
+  if (eq.numListeners != 0) {
+    printf("Value: %d\n", eq.numListeners);
+  }
+
+  report("initEventQueue()");
+}
+
 
 int main(int argc, char **argv) {
   printf("Running tests...\n\n");
@@ -388,6 +402,7 @@ int main(int argc, char **argv) {
   test_initEvent();
   test_appendEvent();
   test_getNextEvent();
+  test_initEventQueue();
 
   return 0;
 }
