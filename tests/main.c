@@ -358,7 +358,93 @@ void test_initEventQueue(void) {
     printf("Value: %d\n", eq.numListeners);
   }
 
+  assertMsg(eq.listeners[3] == 0, "EventQueue was not properly initialized");
+  if (eq.listeners[3] != 0) {
+    printf("Value: %p\n", eq.listeners[3]);
+  }
+
   report("initEventQueue()");
+}
+
+void test_addListener(void) {
+  // Create some EventListeners and an EventQueue
+  mfsm_EventListener el1;
+  mfsm_EventListener el2;
+  initEventListener(&el1);
+  initEventListener(&el2);
+
+  mfsm_EventQueue eq;
+  initEventQueue(&eq);
+
+  // Add the listeners to the EventQueue
+  addListener(&eq, &el1);
+  addListener(&eq, &el2);
+
+  // Test if the listeners were added to the EventQueue.
+  if (eq.listeners[0] != &el1) {
+    printf("EventListener #1 was not successfully added\n");
+    printf("Expected: %p\n", &el1);
+    printf("Found:    %p\n", eq.listeners[0]);
+  }
+  assertMsg(eq.numListeners == 1, "numListeners was not updated");
+
+  if (eq.listeners[1] != &el2) {
+    printf("EventListener #2 was not successfully added\n");
+    printf("Expected: %p\n", &el2);
+    printf("Found:    %p\n", eq.listeners[1]);
+  }
+  assertMsg(eq.numListeners == 2, "numListeners was not updated");
+
+  report("addListener()");
+}
+
+void test_removeListener(void) {
+  // Create some EventListeners and an EventQueue
+  mfsm_EventListener el1;
+  mfsm_EventListener el2;
+  initEventListener(&el1);
+  initEventListener(&el2);
+
+  mfsm_EventQueue eq;
+  initEventQueue(&eq);
+
+  // Add the listeners to the EventQueue
+  addListener(&eq, &el1);
+  addListener(&eq, &el2);
+
+  // Test if the listeners were added to the EventQueue.
+  if (eq.listeners[0] != &el1) {
+    printf("EventListener #1 was not successfully added\n");
+    printf("Expected: %p\n", &el1);
+    printf("Found:    %p\n", eq.listeners[0]);
+  }
+  assertMsg(eq.numListeners == 1, "numListeners was not updated");
+
+  if (eq.listeners[1] != &el2) {
+    printf("EventListener #2 was not successfully added\n");
+    printf("Expected: %p\n", &el2);
+    printf("Found:    %p\n", eq.listeners[1]);
+  }
+  assertMsg(eq.numListeners == 2, "numListeners was not updated");
+
+  // Try to remove the listeners
+  int i = removeListener(&eq, &el1);
+  if (eq.listeners[0] != 0) {
+    printf("EventListener #1 was not successfully removed\n");
+    printf("Value: %p\n", eq.listeners[0]);
+    printf("Error: %d\n", i);
+  }
+  assertMsg(eq.numListeners == 1, "numListeners was not updated");
+
+  i = removeListener(&eq, &el2);
+  if (eq.listeners[1] != 0) {
+    printf("EventListener #2 was not successfully removed\n");
+    printf("Value: %p\n", eq.listeners[1]);
+    printf("Error: %d\n", i);
+  }
+  assertMsg(eq.numListeners == 0, "numListeners was not updated");
+
+  report("removeListener()");
 }
 
 
@@ -403,6 +489,8 @@ int main(int argc, char **argv) {
   test_appendEvent();
   test_getNextEvent();
   test_initEventQueue();
+  test_addListener();
+  test_removeListener();
 
   return 0;
 }

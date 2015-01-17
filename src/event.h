@@ -125,4 +125,36 @@ typedef struct mfsm_EventQueue{
 // None
 void initEventQueue(mfsm_EventQueue *eq);
 
+// int addListener(mfsm_EventQueue*, mfsm_EventListener*)
+//
+// Adds an EventListener to the EventQueue's listener array.
+//
+// Parameters:
+// eq   mfsm_EventQueue*      EventQueue context
+// el   mfsm_EventListener*   EventListener to be stored
+//
+// Returns:
+// Success -- 0
+// Failure:
+//  -1 -- Invalid EventQueue
+//  -2 -- No more room in the EventQueue
+//  -3 -- Invalid EventListener
+int addListener(mfsm_EventQueue *eq, mfsm_EventListener *el);
+
+// int removeListener(mfsm_EventQueue*, mfsm_EventListener*)
+//
+// Removes an EventListener from the EventQueue's listener array.
+//
+// Parameters:
+// eq   mfsm_EventQueue*      EventQueue context
+// el   mfsm_EventListener*   EventListener to be stored
+//
+// Returns:
+// Success -- 0
+// Failure:
+//  -1 -- Invalid EventQueue
+//  -2 -- Invalid EventListener
+//  -3 -- EventListener was not present in the EventQueue
+int removeListener(mfsm_EventQueue *eq, mfsm_EventListener *el);
+
 #endif //EVENT_H

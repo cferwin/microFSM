@@ -123,4 +123,94 @@ int appendEvent(mfsm_EventListener *el, mfsm_Event e) {
 // None
 void initEventQueue(mfsm_EventQueue *eq) {
   eq->numListeners = 0;
+
+  int i = 0;
+  for (; i < MAX_EVENT_LISTENERS; i++) {
+    eq->listeners[i] = 0;
+  }
+}
+
+// int addListener(mfsm_EventQueue*, mfsm_EventListener*)
+//
+// Adds an EventListener to the EventQueue's listener array.
+//
+// Parameters:
+// eq   mfsm_EventQueue*      EventQueue context
+// el   mfsm_EventListener*   EventListener to be stored
+//
+// Returns:
+// Success -- 0
+// Failure:
+//  -1 -- Invalid EventQueue
+//  -2 -- No more room in the EventQueue
+//  -3 -- Invalid EventListener
+int addListener(mfsm_EventQueue *eq, mfsm_EventListener *el) {
+  // Do validations
+  if (eq == 0) {
+    return -1;
+  }
+
+  if (el == 0) {
+    return -3;
+  }
+
+  if (eq->numListeners >= MAX_EVENT_LISTENERS) {
+    return -2;
+  }
+
+  // Add the EventListener to the EventQueue
+  int i = 0;
+  for (; i < MAX_EVENT_LISTENERS; i++) {
+    if (eq->listeners[i] == 0) {
+      eq->listeners[i] = el;
+      eq->numListeners++;
+      return 0;
+    }
+  }
+
+  return -2;
+}
+
+// int removeListener(mfsm_EventQueue*, mfsm_EventListener*)
+//
+// Removes an EventListener from the EventQueue's listener array.
+//
+// Parameters:
+// eq   mfsm_EventQueue*      EventQueue context
+// el   mfsm_EventListener*   EventListener to be stored
+//
+// Returns:
+// Success -- 0
+// Failure:
+//  -1 -- Invalid EventQueue
+//  -2 -- EventQueue is already empty
+//  -3 -- Invalid EventListener
+//  -4 -- EventListener was not present in the EventQueue
+int removeListener(mfsm_EventQueue *eq, mfsm_EventListener *el) {
+  // Do validations
+  if (eq == 0) {
+    return -1;
+  }
+
+  if (el == 0) {
+    return -3;
+  }
+
+  if (eq->numListeners < 1) {
+    return -2;
+  }
+
+  // Find the EventListener
+  int i = 0;
+  for (; i < MAX_EVENT_LISTENERS; i++) {
+    if (eq->listeners[i] == el) {
+      // Nullify the EventListener pointer
+      eq->listeners[i] = 0;
+      eq->numListeners--;
+      return 0;
+    }
+  }
+
+  // The EventListener was not found
+  return -4;
 }
