@@ -447,6 +447,30 @@ void test_removeListener(void) {
   report("removeListener()");
 }
 
+void test_sendEvent(void) {
+  // Initialize an EventQueue, listeners, and an Event
+  mfsm_EventQueue eq;
+  initEventQueue(&eq);
+
+  mfsm_EventListener el1;
+  mfsm_EventListener el2;
+  initEventListener(&el1);
+  initEventListener(&el2);
+  addListener(&eq, &el1);
+  addListener(&eq, &el2);
+
+  mfsm_Event e;
+  initEvent(&e, 7);
+
+  sendEvent(eq, e);
+
+  // See if the event was sent
+  assertMsg(el1.events[0].id == 7, "Event was not successfully send to EL#1");
+  assertMsg(el2.events[0].id == 7, "Event was not successfully send to EL#2");
+
+  report("sendEvent()");
+}
+
 
 int main(int argc, char **argv) {
   printf("Running tests...\n\n");
@@ -491,6 +515,7 @@ int main(int argc, char **argv) {
   test_initEventQueue();
   test_addListener();
   test_removeListener();
+  test_sendEvent();
 
   return 0;
 }

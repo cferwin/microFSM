@@ -214,3 +214,37 @@ int removeListener(mfsm_EventQueue *eq, mfsm_EventListener *el) {
   // The EventListener was not found
   return -4;
 }
+
+// int sendEvent(mfsm_EventQueue, mfsm_Event)
+//
+// Send an event to every EventListener registered with the EventQueue.
+//
+// Parameters:
+// eq   mfsm_EventQueue   EventQueue context
+// e    mfsm_Event        Event to be sent
+//
+// Returns:
+// Success -- 0
+// Failure:
+//  -1 -- Event could not be sent to at least one listener. Confirm they are
+//  still valid.
+int sendEvent(mfsm_EventQueue eq, mfsm_Event e) {
+  // TODO: This function could return the number of errors as a negative
+  // number insead of a singular error code.
+  int numErrors = 0; // Count number of listeners that were unavailable
+
+  // Try to send the events
+  int i = 0;
+  for (; i < eq.numListeners; i++) {
+    if (appendEvent(eq.listeners[i], e) < 0) {
+      // Append returned an error code
+      numErrors++;
+    }
+  }
+
+  if (numErrors != 0) {
+    return -1;
+  }
+
+  return 0;
+}

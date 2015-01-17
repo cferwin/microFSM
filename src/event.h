@@ -157,4 +157,19 @@ int addListener(mfsm_EventQueue *eq, mfsm_EventListener *el);
 //  -3 -- EventListener was not present in the EventQueue
 int removeListener(mfsm_EventQueue *eq, mfsm_EventListener *el);
 
+// int sendEvent(mfsm_EventQueue, mfsm_Event)
+//
+// Send an event to every EventListener registered with the EventQueue.
+//
+// Parameters:
+// eq   mfsm_EventQueue   EventQueue context
+// e    mfsm_Event        Event to be sent
+//
+// Returns:
+// Success -- 0
+// Failure:
+//  -1 -- Event could not be sent to at least one listener. Confirm they are
+//  still valid.
+int sendEvent(mfsm_EventQueue eq, mfsm_Event e);
+
 #endif //EVENT_H
