@@ -145,6 +145,42 @@ int removeTransition(mfsm_fsm *fsm, int n, int s);
 // -2 -- Something went wrong removing the transition destinations
 int removeTransitionAll(mfsm_fsm *fsm, int n);
 
+// int setTransitionOutput(mfsm_fsm*, int, int, mfsm_Event)
+//
+// Set an Event to be sent out to all listeners when the transition is
+// executed.
+//
+// Parameters:
+// fsm  mfsm_fsm* Pointer to FSM context
+// n    int       Input ID
+// s    int       Source state ID
+//
+// Returns:
+// Success -- 0
+// Failure:
+//  -1 -- Invalid input ID
+//  -2 -- Invalid source state ID
+//  -3 -- Something went wrong setting the event
+int setTransitionOutput(mfsm_fsm *fsm, int n, int s, mfsm_Event e);
+
+// int clearTransitionOutput(mfsm_fsm*, int, int)
+//
+// Reset the transition's output Event. An Event will no longer be sent for
+// this transition.
+//
+// Parameters:
+// fsm  mfsm_fsm* Pointer to FSM context
+// n    int       Input ID
+// s    int       Source state ID
+//
+// Returns:
+// Success -- 0
+// Failure:
+//  -1 -- Invalid input ID
+//  -2 -- Invalid source state ID
+//  -3 -- Something went wrong resetting the event
+int clearTransitionOutput(mfsm_fsm *fsm, int n, int s);
+
 // int addState(mfsm_fsm*, int)
 //
 // Adds a state ID to the list of tracked states.

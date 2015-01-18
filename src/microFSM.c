@@ -246,6 +246,86 @@ int removeTransitionAll(mfsm_fsm *fsm, int n) {
   return 0;
 }
 
+// int setTransitionOutput(mfsm_fsm*, int, int, mfsm_Event)
+//
+// Set an Event to be sent out to all listeners when the transition is
+// executed.
+//
+// Parameters:
+// fsm  mfsm_fsm* Pointer to FSM context
+// n    int       Input ID
+// s    int       Source state ID
+//
+// Returns:
+// Success -- 0
+// Failure:
+//  -1 -- Invalid input ID
+//  -2 -- Invalid source state ID
+//  -3 -- Something went wrong setting the event
+int setTransitionOutput(mfsm_fsm *fsm, int n, int s, mfsm_Event e) {
+  // Find the given input
+  int ni = getInputIndex(*fsm, n);
+  if (ni == -1) {
+    return -1;
+  }
+
+  // Find the given source state
+  int si = getStateIndex(*fsm, s);
+  if (si == -1) {
+    return -2;
+  }
+
+  // Copy the Event into the Transition
+  // TODO: This must be updated if the Event struct is changed.
+  // This may indicate the need for a copy function for Events.
+  initEvent(&fsm->destinations[ni][si].outputEvent, e.id);
+
+  if (fsm->destinations[ni][si].outputEvent.id != e.id) {
+    return -3;
+  }
+
+  return 0;
+}
+
+// int clearTransitionOutput(mfsm_fsm*, int, int)
+//
+// Reset the transition's output Event. An Event will no longer be sent for
+// this transition.
+//
+// Parameters:
+// fsm  mfsm_fsm* Pointer to FSM context
+// n    int       Input ID
+// s    int       Source state ID
+//
+// Returns:
+// Success -- 0
+// Failure:
+//  -1 -- Invalid input ID
+//  -2 -- Invalid source state ID
+//  -3 -- Something went wrong resetting the event
+int clearTransitionOutput(mfsm_fsm *fsm, int n, int s) {
+  // Find the given input
+  int ni = getInputIndex(*fsm, n);
+  if (ni == -1) {
+    return -1;
+  }
+
+  // Find the given source state
+  int si = getStateIndex(*fsm, s);
+  if (si == -1) {
+    return -2;
+  }
+
+  // Invalidate the output event
+  initEvent(&fsm->destinations[ni][si].outputEvent, NULL_EVENT_ID);
+
+  if (fsm->destinations[ni][si].outputEvent.id != NULL_EVENT_ID) {
+    return -3;
+  }
+
+  return 0;
+}
+
 // int addState(mfsm_fsm*, int)
 //
 // Adds a state ID to the list of tracked states.

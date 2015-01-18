@@ -240,6 +240,47 @@ void test_removeTransitionAll(void) {
   report("removeTransitionAll()");
 }
 
+void test_setTransitionOutput(void) {
+  // Create an FSM, Transition, and Event
+  mfsm_fsm fsm;
+  initFSM(&fsm);
+
+  addState(&fsm, 7); // Source State
+  addState(&fsm, 9); // Destination State
+  addInput(&fsm, 2); // Input
+  addTransition(&fsm, 2, 7, 9);
+  
+  mfsm_Event e;
+  initEvent(&e, 4);
+
+  // Set the output Event
+  setTransitionOutput(&fsm, 2, 7, e);
+
+  // TODO: Test the output of this function.
+}
+
+void test_clearTransitionOutput(void) {
+  // Create an FSM, Transition, and Event
+  mfsm_fsm fsm;
+  initFSM(&fsm);
+
+  addState(&fsm, 7); // Source State
+  addState(&fsm, 9); // Destination State
+  addInput(&fsm, 2); // Input
+  addTransition(&fsm, 2, 7, 9);
+  
+  mfsm_Event e;
+  initEvent(&e, 4);
+
+  // Set the output Event
+  setTransitionOutput(&fsm, 2, 7, e);
+
+  // Clear the output Event
+  clearTransitionOutput(&fsm, 2, 7);
+
+  // TODO: Test the output of this function.
+}
+
 void test_doTransition(void) {
   // Create a mock fsm, input, source state, and destination state
   mfsm_fsm fsm;
@@ -500,6 +541,8 @@ int main(int argc, char **argv) {
   test_addTransition();
   test_removeTransition();
   test_removeTransitionAll();
+  test_setTransitionOutput();
+  test_clearTransitionOutput();
 
   // Test transition functionality
   test_doTransition();
