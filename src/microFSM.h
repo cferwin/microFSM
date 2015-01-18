@@ -1,6 +1,8 @@
 #ifndef MICROFSM_H
 #define MICROFSM_H
 
+#include "event.h"
+
 #define MAX_STATES 128
 #define MAX_INPUTS 32
 #define MIN_STATE_ID 1
@@ -15,6 +17,15 @@
  * transitions.
 **************************************/
 
+// Factored out transition destinations into a separate structure to enable
+// more flexibility for input/output events, etc.
+typedef struct mfsm_Transition {
+  int dest; // ID of destination State
+
+  // Event to be dispatched from the FSM when the transition is executed
+  mfsm_Event outputEvent;
+} mfsm_Transition;
+
 typedef struct mfsm_fsm {
   // ID of the currently active state. Used as the "source" state in
   // transitions.
@@ -23,11 +34,10 @@ typedef struct mfsm_fsm {
   int states[MAX_STATES]; // Stores IDs of states tracked within the FSM
   int inputs[MAX_INPUTS]; // Stores IDs of tracked inputs to the FSM
 
-  // Stores ID's of destination states when the
-  // FSM recieves a specific input from a specific source state. The states
-  // and inputs arrays are PARALLEL with the transitions array; indexes must be
-  // identical.
-  int destinations[MAX_INPUTS][MAX_STATES];
+  // Stores ID's of destination states, etc when the FSM recieves a specific
+  // input from a specific source state. The states and inputs arrays are
+  // PARALLEL with the transitions array; indexes must be identical.
+  mfsm_Transition destinations[MAX_INPUTS][MAX_STATES];
 } mfsm_fsm;
 
 /***************************************

@@ -1,5 +1,8 @@
 #include "microFSM.h"
 
+// An event ID which represents an invalid Event as per documentation.
+#define NULL_EVENT_ID -1
+
 /***************************************
 * FSM Interface Functions
 ***************************************/
@@ -28,7 +31,8 @@ void initFSM(mfsm_fsm *fsm) {
 
   for(i = 0; i < MAX_INPUTS; i++) {
     for(j = 0; j < MAX_STATES; j++) {
-      fsm->destinations[i][j] = 0;
+      fsm->destinations[i][j].dest = 0;
+      initEvent(&fsm->destinations[i][j].outputEvent, NULL_EVENT_ID);
     }
   }
 }
@@ -115,7 +119,7 @@ int isValidTransition(mfsm_fsm fsm, int n, int s) {
   }
 
   // Validate the transition's destination state
-  if (isValidStateID(fsm, fsm.destinations[ni][si]) != 0) {
+  if (isValidStateID(fsm, fsm.destinations[ni][si].dest) != 0) {
     return -3;
   }
 
@@ -158,7 +162,9 @@ int addTransition(mfsm_fsm *fsm, int n, int s, int d) {
   }
 
   // Associate the input and source state with the destination state
-  fsm->destinations[ni][si] = d;
+  mfsm_Transition *transition = &fsm->destinations[ni][si];
+  transition->dest = d;
+  initEvent(&transition->outputEvent, NULL_EVENT_ID);
 
   // Confirm the transition's destination state was set correctly
   if (isValidTransition(*fsm, n, s) != 0) {
@@ -196,7 +202,7 @@ int removeTransition(mfsm_fsm *fsm, int n, int s) {
   }
 
   // Reset the destination ID for the state/input transition
-  fsm->destinations[ni][si] = MIN_STATE_ID-1;
+  fsm->destinations[ni][si].dest = MIN_STATE_ID-1;
 
   // Confirm the transition's destination state was reset and is invalid
   if (isValidTransition(*fsm, n, s) == 0) {
@@ -229,7 +235,7 @@ int removeTransitionAll(mfsm_fsm *fsm, int n) {
   int i = 0;
   for (; i < MAX_STATES; i++) {
     // Reset the destination
-    fsm->destinations[ni][i] = MIN_STATE_ID-1;
+    fsm->destinations[ni][i].dest = MIN_STATE_ID-1;
 
     // Confirm the transition's destination state was reset and is invalid
     if (isValidTransition(*fsm, n, fsm->states[i]) == 0) {
@@ -392,7 +398,7 @@ int doTransition(mfsm_fsm *fsm, int n) {
 
   // Check if there is a new destination for the transition
   if (isValidTransition(*fsm, n, fsm->curState) == 0) {
-    fsm->curState = fsm->destinations[ni][si];
+    fsm->curState = fsm->destinations[ni][si].dest;
   }
 
   return fsm->curState;

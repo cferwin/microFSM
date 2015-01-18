@@ -65,7 +65,7 @@ void test_isValidTransition(void) {
   fsm.inputs[4] = 7;            // Input
   fsm.states[9] = 2;            // Source state
   fsm.states[8] = 6;            // Destination state
-  fsm.destinations[4][9] = 6;   // Make the associations
+  fsm.destinations[4][9].dest = 6;   // Make the associations
 
   // Attempt to verify the transition
   int i = isValidTransition(fsm, 7, 2);
@@ -159,7 +159,7 @@ void test_addTransition(void) {
   }
 
   // Test whether the transition is stored in the destinations array
-  int d = fsm.destinations[4][9];
+  int d = fsm.destinations[4][9].dest;
   assertMsg(d == 6, "The stored destination ID was incorrect");
   if (d != 6) {
     printf("Value: %d\n", d);
@@ -191,7 +191,7 @@ void test_removeTransition(void) {
   }
 
   // Test whether the transition was removed from the destinations array
-  int d = isValidStateID(fsm, fsm.destinations[4][9]);
+  int d = isValidStateID(fsm, fsm.destinations[4][9].dest);
   assertMsg(d != 0, "The stored destination ID was still valid");
 
   report("removeTransition()");
@@ -228,13 +228,13 @@ void test_removeTransitionAll(void) {
   }
 
   // Test whether the transitions were removed from the destinations array
-  int d = isValidStateID(fsm, fsm.destinations[3][2]);
+  int d = isValidStateID(fsm, fsm.destinations[3][2].dest);
   assertMsg(d != 0, "The stored destination ID #1 was still valid");
 
-  d = isValidStateID(fsm, fsm.destinations[3][4]);
+  d = isValidStateID(fsm, fsm.destinations[3][4].dest);
   assertMsg(d != 0, "The stored destination ID #2 was still valid");
 
-  d = isValidStateID(fsm, fsm.destinations[3][6]);
+  d = isValidStateID(fsm, fsm.destinations[3][6].dest);
   assertMsg(d != 0, "The stored destination ID #3 was still valid");
 
   report("removeTransitionAll()");
