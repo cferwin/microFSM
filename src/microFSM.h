@@ -38,6 +38,10 @@ typedef struct mfsm_fsm {
   // input from a specific source state. The states and inputs arrays are
   // PARALLEL with the transitions array; indexes must be identical.
   mfsm_Transition destinations[MAX_INPUTS][MAX_STATES];
+
+  // Enable outside parties to listen to events being dispatched from this
+  // structure.
+  mfsm_EventQueue eq;
 } mfsm_fsm;
 
 /***************************************

@@ -21,20 +21,26 @@ void initFSM(mfsm_fsm *fsm) {
   int j = 0;
   fsm->curState = 0;
 
+  // States array
   for(; i < MAX_STATES; i++) {
     fsm->states[i] = 0;
   }
 
+  // Inputs array
   for(i = 0; i < MAX_INPUTS; i++) {
     fsm->inputs[i] = 0;
   }
 
+  // Destinations array
   for(i = 0; i < MAX_INPUTS; i++) {
     for(j = 0; j < MAX_STATES; j++) {
       fsm->destinations[i][j].dest = 0;
       initEvent(&fsm->destinations[i][j].outputEvent, NULL_EVENT_ID);
     }
   }
+
+  // Event Queue
+  initEventQueue(&fsm->eq);
 }
 
 // int isValidStateID(struct mfsm_fsm, int)
@@ -479,6 +485,11 @@ int doTransition(mfsm_fsm *fsm, int n) {
   // Check if there is a new destination for the transition
   if (isValidTransition(*fsm, n, fsm->curState) == 0) {
     fsm->curState = fsm->destinations[ni][si].dest;
+  }
+
+  // Try to fire the output event
+  if (fsm->destinations[ni][si].outputEvent.id != NULL_EVENT_ID) {
+    sendEvent(fsm->eq, fsm->destinations[ni][si].outputEvent);
   }
 
   return fsm->curState;

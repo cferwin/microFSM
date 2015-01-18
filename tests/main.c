@@ -290,12 +290,21 @@ void test_doTransition(void) {
   fsm.states[8] = 6;            // Destination state
   fsm.curState = 2;
 
+  // Create an event listener and test Event
+  mfsm_EventListener el;
+  initEventListener(&el);
+  addListener(&fsm.eq, &el);
+
+  mfsm_Event e;
+  initEvent(&e, 20);
+
   // Attempt to create the transition
   int i = addTransition(&fsm, 7, 2, 6);
   assertMsg(i == 0, "The transition was not successfully created");
   if (i != 0) {
     printf("Returned: %d\n", i);
   }
+  setTransitionOutput(&fsm, 7, 2, e);
   
   // Attempt to execute the transition
   i = doTransition(&fsm, 7);
@@ -310,6 +319,12 @@ void test_doTransition(void) {
 
   // Test whether the current state has been updated
   assertMsg(fsm.curState == 6, "The current state ID was not changed");
+
+  // Test if the event has fired
+  assertMsg(el.numEvents == 1, "The Output event was not sent.");
+  mfsm_Event next;
+  getNextEvent(&el, &next);
+  assertMsg(next.id == e.id, "Received Event ID does not match output Event");
 
   report("doTransition()");
 }
