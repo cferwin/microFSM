@@ -19,7 +19,8 @@
 void initFSM(mfsm_fsm *fsm) {
   int i = 0;
   int j = 0;
-  fsm->curState = 0;
+  fsm->curState = MIN_STATE_ID-1;
+  fsm->curInput = MIN_INPUT_ID-1;
 
   // States array
   for(; i < MAX_STATES; i++) {
@@ -491,6 +492,9 @@ int doTransition(mfsm_fsm *fsm, int n) {
   if (fsm->destinations[ni][si].outputEvent.id != NULL_EVENT_ID) {
     sendEvent(fsm->eq, fsm->destinations[ni][si].outputEvent);
   }
+
+  // Set the current Input
+  fsm->curInput = n;
 
   return fsm->curState;
 }

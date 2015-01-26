@@ -31,6 +31,8 @@ typedef struct mfsm_fsm {
   // transitions.
   int curState;
 
+  int curInput; // ID of the current Input
+
   int states[MAX_STATES]; // Stores IDs of states tracked within the FSM
   int inputs[MAX_INPUTS]; // Stores IDs of tracked inputs to the FSM
 

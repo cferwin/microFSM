@@ -101,7 +101,7 @@ int appendEvent(mfsm_EventListener *el, mfsm_Event e) {
   // Copy the data from the most recent event to the destination
   // TODO: This works for now, but make it more readable when more variables
   // are added to the mfsm_Event structure.
-  el->events[el->numEvents-1].id = e.id;
+  el->events[el->numEvents].id = e.id;
 
   el->numEvents++;
 
